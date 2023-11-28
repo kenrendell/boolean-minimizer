@@ -74,8 +74,8 @@ end
 -- Quine McCluskey Algorithm
 -- See https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm
 function M.get_prime_implicants(terms, dc_terms, n, maxterm)
-	-- If maxterm = true, then the terms (including don't-care terms or dc_terms) are maxterms.
-	-- If maxterm = false, then the terms (including don't-care terms or dc_terms) are minterms.
+	-- If maxterm = true, then the terms are maxterms.
+	-- If maxterm = false, then the terms are minterms.
 
 	local prime_implicants = {}
 	local implicants = { set_bits = {} }
