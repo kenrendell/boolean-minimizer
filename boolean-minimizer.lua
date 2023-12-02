@@ -1,13 +1,13 @@
 #!/usr/bin/env lua5.4
 
-local cwd = arg[0]:match(".+/")
-local qmc = require(cwd .. 'lib/qmc')
+local qmc = require('lib.qmc')
 
 local help_msg = table.concat({
 	"Usage:",
 	"  boolean-minimize [options] --input {num|char [chars...]} --{minterm|maxterm} [term [terms...]]\n",
 	"Options:",
 	"  --all                             := print all solutions to the Boolean function.",
+	"  --verbose                         := show minimization process.",
 	"  --sum-of-product                  := show all results in sum-of-products (SOP) form.",
 	"  --product-of-sum                  := show all results in product-of-sums (POS) form.",
 	"  --input {num|char [chars...]}     := number of inputs or variables in a Boolean function.",
@@ -27,12 +27,13 @@ end
 
 local current_option, options = nil, {
 	["all"] = {{}, false}, -- print all solutions to the Boolean function.
+	["verbose"] = {{}, false}, -- show minimization process
+	["sum-of-product"] = {{}, false}, -- show all results in sum-of-products (SOP) form.
+	["product-of-sum"] = {{}, false}, -- show all results in product-of-sums (POS) form.
 	["input"] = {{}, false}, -- number of inputs or variables in a Boolean function.
 	["minterm"] = {{}, false}, -- minterms of a Boolean function.
 	["maxterm"] = {{}, false}, -- maxterms of a Boolean function.
 	["optional-term"] = {{}, false}, -- don't-care terms of a Boolean function.
-	["sum-of-product"] = {{}, false}, -- show all results in sum-of-products (SOP) form.
-	["product-of-sum"] = {{}, false}, -- show all results in product-of-sums (POS) form.
 }
 
 -- Show help message when there is no provided arguments.
@@ -50,6 +51,10 @@ end
 
 if options.all[2] and #options.all[1] > 0 then
 	print_error([[option "all" doesn't accept any arguments!]], 1)
+end
+
+if options.verbose[2] and #options.verbose[1] > 0 then
+	print_error([[option "verbose" doesn't accept any arguments!]], 1)
 end
 
 if options.minterm[2] and options.maxterm[2] then
@@ -128,15 +133,16 @@ if options.minterm[2] or options.maxterm[2] then
 	-- Convert terms from minterms to maxterms or vice versa.
 	if convert_term then for i = 0, max_input do
 		if not terms_set[i] then table.insert(terms, i) end
-	end end
+	end end table.sort(terms)
 else print_error('either option "minterm" or "maxterm" must be specified!', 1) end
 
 -- Print the resulting minimize boolean expression.
 if #terms + #dc_terms == 1 << #symbols then io.stdout:write((maxterm and "0\n") or "1\n")
 elseif #terms == 0 then io.stdout:write((maxterm and "1\n") or "0\n")
-else -- Solve for the boolean expression using Quine-McCluskey method and Petrick's method.
+else if options.verbose[2] then qmc.verbose = true end
+	-- Solve for the boolean expression using Quine-McCluskey method and Petrick's method.
 	local prime_implicants = qmc.get_prime_implicants(terms, dc_terms, #symbols, maxterm)
-	local covers = qmc.minimize_prime_implicants(prime_implicants, terms)
+	local covers = qmc.minimize_prime_implicants(prime_implicants, terms, #symbols, maxterm)
 
 	if options.all[2] then -- print all solutions
 		for _, complexity in ipairs(covers.complexity) do

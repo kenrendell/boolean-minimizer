@@ -28,4 +28,7 @@ boolean-minimizer --input 4 --minterm 0 2 5 6 7 8 9 13 --optional-term 1 12 15
 
 # Minimize Boolean function F(A, B, C, D) with don't-care terms and print all solutions.
 boolean-minimizer --all --input 4 --minterm 0 2 5 6 7 8 9 13 --optional-term 1 12 15
+
+# To show minimization process.
+boolean-minimizer --verbose --input 4 --minterm 0 2 5 6 7 8 9 13 --optional-term 1 12 15
 ```
