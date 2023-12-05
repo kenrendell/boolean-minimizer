@@ -6,7 +6,7 @@ local help_msg = table.concat({
 	"Usage:",
 	"  boolean-minimizer [options] --input {num|char [chars...]} --{minterm|maxterm} [term [terms...]]\n",
 	"Options:",
-	"  --all                             := print all solutions to the Boolean function.",
+	"  --all                             := print all minimal solutions to the Boolean function.",
 	"  --verbose                         := show minimization process.",
 	"  --sum-of-product                  := show all results in sum-of-products (SOP) form.",
 	"  --product-of-sum                  := show all results in product-of-sums (POS) form.",
