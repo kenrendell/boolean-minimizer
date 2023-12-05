@@ -4,7 +4,7 @@ local qmc = require('lib.qmc')
 
 local help_msg = table.concat({
 	"Usage:",
-	"  boolean-minimize [options] --input {num|char [chars...]} --{minterm|maxterm} [term [terms...]]\n",
+	"  boolean-minimizer [options] --input {num|char [chars...]} --{minterm|maxterm} [term [terms...]]\n",
 	"Options:",
 	"  --all                             := print all solutions to the Boolean function.",
 	"  --verbose                         := show minimization process.",
